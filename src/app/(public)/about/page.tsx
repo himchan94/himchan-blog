@@ -5,7 +5,7 @@ import MDXContent from "@/components/mdx/MDXContent";
 import ProfileImage from "@/components/ProfileImage";
 
 export default async function About() {
-  const about = isMock ? mockAbout : await prisma.page.findUnique({ where: { key: "about" } });
+  const about = isMock ? mockAbout() : await prisma.page.findUnique({ where: { key: "about" } });
 
   if (!about) {
     notFound();

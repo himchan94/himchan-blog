@@ -1,12 +1,13 @@
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/auth";
 import { prisma } from "@/lib/db";
+import { isMock, mockAdmin } from "@/mocks";
 import PostForm from "../PostForm";
 
 export default async function EditPost({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
   const { id } = await params;
-  const [post, seriesOptions] = await Promise.all([
+  const [post, seriesOptions] = isMock ? [mockAdmin.post(id), mockAdmin.seriesOptions()] : await Promise.all([
     prisma.post.findUnique({ where: { id } }),
     prisma.series.findMany({ orderBy: { title: "asc" }, select: { id: true, title: true } }),
   ]);

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/auth";
 import { prisma } from "@/lib/db";
+import { isMock, mockAdmin } from "@/mocks";
 import {
   field,
   formError,
@@ -27,6 +28,13 @@ export async function savePost(
     return formError("시리즈 내 순서를 1 이상의 정수로 입력하세요.", formData);
   }
   const data = { ...fields, categories: splitList(field(formData, "categories")), seriesId, seriesOrder };
+
+  if (isMock) {
+    const error = mockAdmin.savePost(id, data);
+    if (error) return formError(error, formData);
+    revalidatePath("/", "layout");
+    redirect("/admin/posts");
+  }
 
   // (seriesId, seriesOrder) 유니크 위반은 P2002라 slug 중복과 구분되지 않아 미리 확인한다.
   if (seriesId) {
@@ -55,7 +63,8 @@ export async function savePost(
 
 export async function deletePost(id: string) {
   await requireAdmin();
-  await prisma.post.deleteMany({ where: { id } });
+  if (isMock) mockAdmin.deletePost(id);
+  else await prisma.post.deleteMany({ where: { id } });
   revalidatePath("/", "layout");
   redirect("/admin/posts");
 }

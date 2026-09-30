@@ -1,10 +1,11 @@
 import { requireAdmin } from "@/auth";
 import { prisma } from "@/lib/db";
+import { isMock, mockAdmin } from "@/mocks";
 import SeriesForm from "./SeriesForm";
 
 export default async function AdminSeries() {
   await requireAdmin();
-  const rows = await prisma.series.findMany({
+  const rows = isMock ? mockAdmin.series() : await prisma.series.findMany({
     orderBy: { title: "asc" },
     include: { _count: { select: { posts: true } } },
   });

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { requireAdmin } from "@/auth";
 import { prisma } from "@/lib/db";
+import { isMock, mockAdmin } from "@/mocks";
 
 export default async function AdminHome() {
   await requireAdmin();
-  const [posts, projects] = await Promise.all([
+  const [posts, projects] = isMock ? mockAdmin.counts() : await Promise.all([
     prisma.post.count(),
     prisma.project.count(),
   ]);

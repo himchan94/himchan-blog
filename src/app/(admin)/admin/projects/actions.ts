@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/auth";
 import { prisma } from "@/lib/db";
+import { isMock, mockAdmin } from "@/mocks";
 import {
   field,
   formError,
@@ -29,6 +30,13 @@ export async function saveProject(
     tech: splitList(field(formData, "tech")),
   };
 
+  if (isMock) {
+    const error = mockAdmin.saveProject(id, data);
+    if (error) return formError(error, formData);
+    revalidatePath("/", "layout");
+    redirect("/admin/projects");
+  }
+
   try {
     if (id) {
       const existing = await prisma.project.findUniqueOrThrow({ where: { id } });
@@ -47,7 +55,8 @@ export async function saveProject(
 
 export async function deleteProject(id: string) {
   await requireAdmin();
-  await prisma.project.deleteMany({ where: { id } });
+  if (isMock) mockAdmin.deleteProject(id);
+  else await prisma.project.deleteMany({ where: { id } });
   revalidatePath("/", "layout");
   redirect("/admin/projects");
 }

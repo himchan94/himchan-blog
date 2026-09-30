@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import { redirect } from "next/navigation";
+import type { Session } from "next-auth";
+import { isMock } from "@/mocks";
 
 // login 이름은 바뀔 수 있으므로 GitHub 숫자 id로 판별한다. env가 비어 있으면 아무도 통과하지 못한다.
 const isAdmin = (githubId: unknown) =>
@@ -23,6 +25,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 // Server Action은 layout을 거치지 않는 별도 POST라서 action마다 직접 호출해야 한다 (ADR-0005).
 export async function requireAdmin() {
+  if (isMock) return { user: { id: "mock", name: "Mock 관리자" }, expires: "" } as Session;
   const session = await auth();
   if (!isAdmin(session?.user?.id)) redirect("/api/auth/signin");
   return session!;

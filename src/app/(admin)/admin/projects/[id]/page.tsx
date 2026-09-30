@@ -1,12 +1,13 @@
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/auth";
 import { prisma } from "@/lib/db";
+import { isMock, mockAdmin } from "@/mocks";
 import ProjectForm from "../ProjectForm";
 
 export default async function EditProject({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
   const { id } = await params;
-  const project = await prisma.project.findUnique({ where: { id } });
+  const project = isMock ? mockAdmin.project(id) : await prisma.project.findUnique({ where: { id } });
 
   if (!project) {
     notFound();
