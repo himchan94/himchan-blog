@@ -1,105 +1,62 @@
-# 마크업 블로그 프로젝트
+# DEVHIMCHAN 블로그
 
-이 프로젝트는 Next.js 기반의 개인 블로그 웹사이트입니다. MDX를 사용하여 블로그 글을 작성하고 관리합니다.
+Next.js 기반 개인 블로그입니다. 글·프로젝트·About은 PostgreSQL에 저장하고, `/admin`에서 작성합니다.
 
-## 시작하기
+## 기술 스택
+
+- [Next.js 16](https://nextjs.org) (App Router, standalone 출력), React 19, TypeScript
+- [Tailwind CSS 4](https://tailwindcss.com)
+- PostgreSQL 17 + [Prisma 7](https://www.prisma.io)
+- 본문: MDX 문자열을 요청 시 [next-mdx-remote](https://github.com/hashicorp/next-mdx-remote)로 렌더링
+- 관리자 인증: [Auth.js](https://authjs.dev) (GitHub OAuth, 계정 1개 허용)
+
+## 로컬 개발
 
 ```bash
+cp .env.example .env        # AUTH_* 값은 GitHub OAuth App을 만들어 채운다
+npm install                 # postinstall에서 prisma generate
+docker compose up -d        # PostgreSQL만 뜬다
+npx prisma migrate deploy
 npm run dev
-# 또는
-yarn dev
-# 또는
-pnpm dev
-# 또는
-bun dev
 ```
 
-브라우저에서 [http://localhost:3000](http://localhost:3000)를 열어 결과를 확인할 수 있습니다.
+- 공개 사이트: http://localhost:3000
+- 관리자: http://localhost:3000/admin
+  - GitHub OAuth App의 callback URL은 `http://localhost:3000/api/auth/callback/github`로 등록한다.
+  - `ADMIN_GITHUB_ID`에는 `https://api.github.com/users/<login>`에서 확인한 숫자 `id`를 넣는다.
+
+기존 MDX 파일(`src/content/`)을 DB로 옮길 때는 한 번만 실행한다(다시 실행해도 slug 기준으로 덮어쓴다).
+
+```bash
+npx tsx scripts/import-mdx.ts
+```
 
 ## 프로젝트 구조
 
 ```
 src/
-├── app/                 # Next.js 앱 라우터
-│   ├── about/           # 소개 페이지
-│   ├── blog/            # 블로그 목록 페이지
-│   ├── posts/           # 게시물 관련 페이지
-│   ├── globals.css      # 전역 스타일
-│   ├── layout.tsx       # 레이아웃 컴포넌트
-│   └── page.tsx         # 메인 페이지
-├── components/          # 재사용 가능한 컴포넌트
-├── content/             # MDX 콘텐츠
-│   ├── posts/           # 블로그 게시물
-│   └── about.mdx        # 소개 페이지 콘텐츠
-├── consts/              # 상수 정의
-├── lib/                 # 유틸리티 함수
-└── types/               # TypeScript 타입 정의
+├── app/
+│   ├── (public)/        # 공개 페이지 (요청 시 렌더링)
+│   ├── (admin)/admin/   # 관리자 CRUD
+│   └── api/auth/        # Auth.js 라우트
+├── auth.ts              # 인증 설정, requireAdmin()
+├── components/mdx/      # MDX 렌더러, 허용 컴포넌트, 저장 전 검증
+├── features/            # 본문에서 쓰는 컴포넌트
+└── lib/                 # DB 클라이언트, 조회 함수
+prisma/                  # 스키마와 마이그레이션
+docs/adr/                # 설계 결정 기록
+docs/domain/             # 도메인별 불변식과 함정
 ```
 
-## 기술 스택
+## 배포 (VPS)
 
-- [Next.js](https://nextjs.org) - React 프레임워크
-- [TypeScript](https://www.typescriptlang.org) - 타입 안전성
-- [Tailwind CSS](https://tailwindcss.com) - 스타일링
-- [MDX](https://mdxjs.com) - 마크다운 + JSX로 콘텐츠 작성
-- [React 19](https://react.dev) - 최신 React 버전
-
-## 배포
-
-이 프로젝트는 GitHub Actions를 통해 자동으로 배포됩니다. 메인 브랜치에 푸시하면 다음과 같은 워크플로우가 실행됩니다:
-
-```yaml
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches:
-      - main # 메인 브랜치에 푸시될 때마다 실행됩니다.
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build and Export
-        run: npm run build
-        env:
-          NEXT_PUBLIC_BASE_PATH: /himchan-version2 # GitHub 레포지토리 이름 설정
-
-      - name: Configure output directory
-        run: |
-          touch out/.nojekyll  # Jekyll 처리 방지
-
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: out
-          clean: true
+```bash
+cp .env.example .env        # 운영 값으로 채운다. POSTGRES_PASSWORD는 반드시 바꾼다
+docker compose --profile app up -d --build
 ```
 
-## 개발 범위
-
-- 블로그 게시물 작성 및 렌더링
-- 코드 하이라이팅
-- 마크다운 표 지원 (GFM)
-- 반응형 디자인
-
-## 배포 블로그 주소
-
-devhimchan.com
+`migrate` 서비스가 `prisma migrate deploy`를 실행한 뒤 `app`(포트 3000)이 뜬다.
+PostgreSQL 포트는 `127.0.0.1`에만 열린다. 앞단에 리버스 프록시(HTTPS)를 두고, 운영 GitHub OAuth App의 callback URL을 운영 도메인으로 등록한다.
 
 ## 라이선스
 

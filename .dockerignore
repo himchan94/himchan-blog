@@ -1,0 +1,8 @@
+.git
+.next
+out
+node_modules
+src/generated
+.env*
+.omc
+.claude

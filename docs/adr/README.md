@@ -59,3 +59,4 @@ ADR은 그 소실을 막는 자리다 — 다른 문서가 "지금 무엇인가"
 | [0003](0003-runtime-mdx-rendering.md) | 본문 MDX는 요청 시 컴파일, JSX 컴포넌트는 허용 목록 | Accepted | mdx |
 | [0004](0004-dynamic-public-rendering.md) | 공개 페이지는 요청 시 렌더링, 빌드는 DB 비의존 | Accepted | platform |
 | [0005](0005-authjs-github-allowlist.md) | 관리자 인증은 Auth.js v5 + GitHub id allowlist + JWT | Accepted | admin |
+| [0006](0006-vps-docker-deploy.md) | GitHub Pages 대신 VPS에서 Docker Compose로 배포 | Accepted | platform |

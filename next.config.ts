@@ -1,7 +1,3 @@
-// const isGithubActions = process.env.GITHUB_ACTIONS || false;
-// const basePath = isGithubActions ? "/himchan-version2" : "";
-// const assetPrefix = isGithubActions ? "/himchan-version2/" : "/";
-
 const basePath = "";
 const assetPrefix = "/";
 

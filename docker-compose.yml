@@ -7,7 +7,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-blog}
       POSTGRES_DB: ${POSTGRES_DB:-blog}
     ports:
-      - "5432:5432"
+      # VPS에서 DB가 외부에 열리지 않도록 로컬 루프백에만 바인딩한다.
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -15,6 +16,32 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  # 1회성: 스키마를 반영하고 종료한다. standalone 이미지에는 prisma CLI가 없어서 builder 단계를 쓴다.
+  migrate:
+    build:
+      context: .
+      target: builder
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-blog}:${POSTGRES_PASSWORD:-blog}@postgres:5432/${POSTGRES_DB:-blog}?schema=public
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles: ["app"]
+
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-blog}:${POSTGRES_PASSWORD:-blog}@postgres:5432/${POSTGRES_DB:-blog}?schema=public
+    ports:
+      - "3000:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    profiles: ["app"]
 
 volumes:
   postgres-data:
