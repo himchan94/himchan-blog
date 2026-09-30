@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import type { Project as ProjectRow } from "@/generated/prisma/client";
 
+export type ProjectSummary = Omit<Project, "content">;
+
 export interface Project {
   slug: string;
   title: string;
@@ -13,7 +15,7 @@ export interface Project {
   content: string;
 }
 
-function toProject(row: ProjectRow): Project {
+function toSummary(row: Omit<ProjectRow, "content">): ProjectSummary {
   return {
     slug: row.slug,
     title: row.title,
@@ -23,21 +25,22 @@ function toProject(row: ProjectRow): Project {
     github: row.github ?? undefined,
     demo: row.demo ?? undefined,
     tech: row.tech,
-    content: row.content,
   };
 }
 
-export async function getAllProjects(): Promise<Project[]> {
+export async function getAllProjects(take?: number): Promise<ProjectSummary[]> {
   const rows = await prisma.project.findMany({
     where: { status: "PUBLISHED" },
     orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+    omit: { content: true },
+    take,
   });
-  return rows.map(toProject);
+  return rows.map(toSummary);
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
   const row = await prisma.project.findFirst({
     where: { slug, status: "PUBLISHED" },
   });
-  return row ? toProject(row) : null;
+  return row ? { ...toSummary(row), content: row.content } : null;
 }

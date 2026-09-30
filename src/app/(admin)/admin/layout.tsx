@@ -19,6 +19,7 @@ export default async function AdminLayout({
             ADMIN
           </Link>
           <Link href='/admin/posts'>Posts</Link>
+          <Link href='/admin/series'>Series</Link>
           <Link href='/admin/projects'>Projects</Link>
           <Link href='/admin/about'>About</Link>
           <Link href='/' className='ml-auto text-sm text-gray-500'>

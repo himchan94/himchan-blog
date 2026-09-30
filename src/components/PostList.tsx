@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Post } from "@/lib/posts";
+import { PostSummary } from "@/lib/posts";
 
 interface PostListProps {
-  posts: Post[];
+  posts: PostSummary[];
 }
 
 export default function PostList({ posts }: PostListProps) {

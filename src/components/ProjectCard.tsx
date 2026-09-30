@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Project } from "@/lib/projects";
+import { ProjectSummary } from "@/lib/projects";
 
 interface ProjectCardProps {
-  project: Project;
+  project: ProjectSummary;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {

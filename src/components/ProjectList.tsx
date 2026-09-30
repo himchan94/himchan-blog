@@ -1,8 +1,8 @@
-import { Project } from "@/lib/projects";
+import { ProjectSummary } from "@/lib/projects";
 import ProjectCard from "./ProjectCard";
 
 interface ProjectListProps {
-  projects: Project[];
+  projects: ProjectSummary[];
 }
 
 export default function ProjectList({ projects }: ProjectListProps) {

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "@/lib/posts";
 import MDXContent from "@/components/mdx/MDXContent";
+import ViewTracker from "@/components/ViewTracker";
 import Link from "next/link";
 
 interface PostPageProps {
@@ -33,22 +34,46 @@ export default async function PostPage({ params }: PostPageProps) {
             </time>
             <span>•</span>
             <span className='font-medium'>DEVHIMCHAN</span>
+            <span>•</span>
+            <span>조회 {post.views.toLocaleString("ko-KR")}</span>
           </div>
           {post.category && post.category.length > 0 && (
             <div className='mt-4 flex flex-wrap justify-center gap-2'>
               {post.category.map((cat) => (
-                <span
+                <Link
                   key={cat}
-                  className='px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full'>
+                  href={`/blog/category/${encodeURIComponent(cat)}`}
+                  className='px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800'>
                   {cat}
-                </span>
+                </Link>
               ))}
             </div>
           )}
         </header>
+        {post.series && (
+          <nav className='mb-12 rounded-xl border border-gray-200 dark:border-gray-700 p-6'>
+            <p className='mb-3 font-bold text-gray-900 dark:text-white'>{post.series.title}</p>
+            <ol className='space-y-1 text-sm'>
+              {post.series.posts.map((item) => (
+                <li key={item.slug}>
+                  {item.slug === post.slug ? (
+                    <span className='font-medium text-blue-600 dark:text-blue-400'>
+                      {item.order}. {item.title}
+                    </span>
+                  ) : (
+                    <Link href={`/blog/${item.slug}`} className='text-gray-600 dark:text-gray-400 hover:underline'>
+                      {item.order}. {item.title}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
         <div className='prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-img:rounded-xl prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-800'>
           <MDXContent source={post.content} />
         </div>
+        <ViewTracker slug={post.slug} />
         <footer className='mt-16 pt-8 border-t border-gray-200 dark:border-gray-700'>
           <div className='flex flex-col sm:flex-row justify-between items-center gap-4'>
             <Link

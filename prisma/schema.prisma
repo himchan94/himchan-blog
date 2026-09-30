@@ -13,18 +13,43 @@ enum Status {
 }
 
 model Post {
-  id          String    @id @default(cuid())
-  slug        String    @unique
+  id          String     @id @default(cuid())
+  slug        String     @unique
   title       String
   description String
   content     String
   categories  String[]
-  status      Status    @default(DRAFT)
+  status      Status     @default(DRAFT)
   publishedAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  seriesId    String?
+  seriesOrder Int?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  series      Series?    @relation(fields: [seriesId], references: [id], onDelete: Restrict)
+  views       PostView[]
 
+  @@unique([seriesId, seriesOrder])
   @@index([status, publishedAt])
+  @@index([categories], type: Gin)
+}
+
+model Series {
+  id          String   @id @default(cuid())
+  title       String   @unique
+  description String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  posts       Post[]
+}
+
+// 조회수를 Post에 두면 조회마다 @updatedAt이 바뀌고 글 행에 쓰기 경합이 생긴다.
+model PostView {
+  postId String
+  date   DateTime @db.Date
+  count  Int      @default(0)
+  post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([postId, date])
 }
 
 model Project {

@@ -6,8 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default async function Home() {
-  const posts = (await getAllPosts()).slice(0, 5);
-  const projects = (await getAllProjects()).slice(0, 3);
+  const posts = await getAllPosts(5);
+  const projects = await getAllProjects(3);
 
   return (
     <div className='max-w-4xl mx-auto px-4 py-16 sm:py-24'>
