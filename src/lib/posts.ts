@@ -1,8 +1,5 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-
-const postsDirectory = path.join(process.cwd(), "src/content/posts");
+import { prisma } from "@/lib/db";
+import type { Post as PostRow } from "@/generated/prisma/client";
 
 export interface Post {
   slug: string;
@@ -13,53 +10,29 @@ export interface Post {
   content: string;
 }
 
-export function getAllPosts(): Post[] {
-  const fileNames = fs.readdirSync(postsDirectory);
-  const allPosts = fileNames
-    .filter((fileName) => fileName.endsWith(".mdx"))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.mdx$/, "");
-      const fullPath = path.join(postsDirectory, fileName);
-      const fileContents = fs.readFileSync(fullPath, "utf8");
-      const { data, content } = matter(fileContents);
-
-      const category = data.category
-        ? data.category.split(",").map((cat: string) => cat.trim())
-        : undefined;
-
-      return {
-        slug,
-        title: data.title,
-        date: data.date,
-        description: data.description,
-        category,
-        content,
-      };
-    })
-    .sort((a, b) => (a.date < b.date ? 1 : -1));
-
-  return allPosts;
+function toPost(row: PostRow): Post {
+  return {
+    slug: row.slug,
+    title: row.title,
+    date: row.publishedAt!.toISOString(),
+    description: row.description,
+    category: row.categories.length > 0 ? row.categories : undefined,
+    content: row.content,
+  };
 }
 
-export function getPostBySlug(slug: string): Post | null {
-  try {
-    const fullPath = path.join(postsDirectory, `${slug}.mdx`);
-    const fileContents = fs.readFileSync(fullPath, "utf8");
-    const { data, content } = matter(fileContents);
+// 공개 쿼리는 PUBLISHED만 본다. 발행 시 publishedAt이 채워진다.
+export async function getAllPosts(): Promise<Post[]> {
+  const rows = await prisma.post.findMany({
+    where: { status: "PUBLISHED" },
+    orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+  });
+  return rows.map(toPost);
+}
 
-    const category = data.category
-      ? data.category.split(",").map((cat: string) => cat.trim())
-      : undefined;
-
-    return {
-      slug,
-      title: data.title,
-      date: data.date,
-      description: data.description,
-      category,
-      content,
-    };
-  } catch (error) {
-    throw new Error(`Error reading post file: ${error}`);
-  }
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  const row = await prisma.post.findFirst({
+    where: { slug, status: "PUBLISHED" },
+  });
+  return row ? toPost(row) : null;
 }

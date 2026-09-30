@@ -5,9 +5,9 @@ import { getAllProjects } from "@/lib/projects";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function Home() {
-  const posts = getAllPosts().slice(0, 5);
-  const projects = getAllProjects().slice(0, 3);
+export default async function Home() {
+  const posts = (await getAllPosts()).slice(0, 5);
+  const projects = (await getAllProjects()).slice(0, 3);
 
   return (
     <div className='max-w-4xl mx-auto px-4 py-16 sm:py-24'>

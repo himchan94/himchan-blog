@@ -1,8 +1,8 @@
 import PostList from "@/components/PostList";
 import { getAllPosts } from "@/lib/posts";
 
-export default function Blog() {
-  const posts = getAllPosts();
+export default async function Blog() {
+  const posts = await getAllPosts();
 
   return (
     <div className='max-w-4xl mx-auto'>

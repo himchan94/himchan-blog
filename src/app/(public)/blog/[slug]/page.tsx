@@ -1,37 +1,20 @@
 import { notFound } from "next/navigation";
-import dynamic from "next/dynamic";
-import { getPostBySlug, getAllPosts } from "@/lib/posts";
+import { getPostBySlug } from "@/lib/posts";
+import MDXContent from "@/components/mdx/MDXContent";
 import Link from "next/link";
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const posts = getAllPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
-
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
 
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();
   }
-
-  const MDXContent = dynamic(() => import(`@/content/posts/${slug}.mdx`), {
-    loading: () => (
-      <div className='space-y-4 animate-pulse'>
-        <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4'></div>
-        <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3'></div>
-        <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2'></div>
-      </div>
-    ),
-  });
 
   return (
     <div className='max-w-4xl mx-auto px-4 py-16'>
@@ -64,7 +47,7 @@ export default async function PostPage({ params }: PostPageProps) {
           )}
         </header>
         <div className='prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-img:rounded-xl prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-800'>
-          <MDXContent />
+          <MDXContent source={post.content} />
         </div>
         <footer className='mt-16 pt-8 border-t border-gray-200 dark:border-gray-700'>
           <div className='flex flex-col sm:flex-row justify-between items-center gap-4'>

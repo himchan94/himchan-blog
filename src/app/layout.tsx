@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Layout from "@/components/Layout";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,9 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang='ko' className='dark' suppressHydrationWarning>
-      <body>
-        <Layout>{children}</Layout>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

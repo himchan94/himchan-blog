@@ -1,8 +1,8 @@
 import ProjectList from "@/components/ProjectList";
 import { getAllProjects } from "@/lib/projects";
 
-export default function Projects() {
-  const projects = getAllProjects();
+export default async function Projects() {
+  const projects = await getAllProjects();
 
   return (
     <div className='max-w-4xl mx-auto'>

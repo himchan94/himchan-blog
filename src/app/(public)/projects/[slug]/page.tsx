@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import dynamic from "next/dynamic";
-import { getProjectBySlug, getAllProjects } from "@/lib/projects";
+import { getProjectBySlug } from "@/lib/projects";
+import MDXContent from "@/components/mdx/MDXContent";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,31 +8,14 @@ interface ProjectPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const projects = getAllProjects();
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
-}
-
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
 
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     notFound();
   }
-
-  const MDXContent = dynamic(() => import(`@/content/projects/${slug}.mdx`), {
-    loading: () => (
-      <div className='space-y-4 animate-pulse'>
-        <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4'></div>
-        <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3'></div>
-        <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2'></div>
-      </div>
-    ),
-  });
 
   return (
     <div className='max-w-4xl mx-auto'>
@@ -120,7 +103,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </div>
 
       <div className='prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-img:rounded-xl prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-800'>
-        <MDXContent />
+        <MDXContent source={project.content} />
       </div>
 
       <footer className='mt-16 pt-8 border-t border-gray-200 dark:border-gray-700'>

@@ -1,16 +1,14 @@
-import dynamic from "next/dynamic";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/db";
+import MDXContent from "@/components/mdx/MDXContent";
 import ProfileImage from "@/components/ProfileImage";
 
-export default function About() {
-  const MDXContent = dynamic(() => import("@/content/about.mdx"), {
-    loading: () => (
-      <div className='space-y-4 animate-pulse'>
-        <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4'></div>
-        <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3'></div>
-        <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2'></div>
-      </div>
-    ),
-  });
+export default async function About() {
+  const about = await prisma.page.findUnique({ where: { key: "about" } });
+
+  if (!about) {
+    notFound();
+  }
 
   return (
     <div className='max-w-4xl mx-auto px-4 py-16'>
@@ -38,7 +36,7 @@ export default function About() {
             prose-strong:text-blue-600 prose-strong:dark:text-blue-400 prose-strong:font-bold
             prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 prose-blockquote:dark:bg-blue-900/20 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-gray-900 prose-blockquote:dark:text-gray-100 prose-blockquote:text-lg prose-blockquote:font-medium
             [&>*]:transition-all [&>*]:duration-300'>
-            <MDXContent />
+            <MDXContent source={about.content} />
           </div>
         </div>
       </div>

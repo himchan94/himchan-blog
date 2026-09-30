@@ -26,10 +26,7 @@
       "@/*": [
         "./src/*"
       ]
-    },
-    "types": [
-      "@mdx-js/react"
-    ]
+    }
   },
   "include": [
     "**/*.ts",
