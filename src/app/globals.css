@@ -1,34 +1,38 @@
 @import "tailwindcss";
 
-/* DESIGN.md 토큰. 다크는 prefers-color-scheme으로 같은 변수를 바꿔 끼워 컴포넌트에서 dark: 분기를 없앤다. */
-:root {
-  --canvas: #ffffff;
-  --parchment: #f5f5f7;
-  --pearl: #fafafc;
-  --ink: #1d1d1f;
-  --ink-80: #333333;
-  --ink-48: #6e6e73;
-  --hairline: #e0e0e0;
-  --divider: #f0f0f0;
-  --primary: #0066cc;
-  --primary-focus: #0071e3;
-  --danger: #d70015;
+@custom-variant dark {
+  &:where([data-color-mode="dark"], [data-color-mode="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-color-mode="light"]), :root:not([data-color-mode="light"]) *) {
+      @slot;
+    }
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --canvas: #000000;
-    --parchment: #1d1d1f;
-    --pearl: #2a2a2c;
-    --ink: #f5f5f7;
-    --ink-80: #cccccc;
-    --ink-48: #8a8a8e;
-    --hairline: #3a3a3c;
-    --divider: #2a2a2c;
-    --primary: #2997ff;
-    --primary-focus: #2997ff;
-    --danger: #ff6961;
-  }
+/* DESIGN.md 토큰. light-dark()로 두 모드 값을 한곳에 두고, 헤더 토글이 data-color-mode로 color-scheme을 고정한다. */
+:root {
+  color-scheme: light dark;
+  --canvas: light-dark(#ffffff, #000000);
+  --parchment: light-dark(#f5f5f7, #1d1d1f);
+  --pearl: light-dark(#fafafc, #2a2a2c);
+  --ink: light-dark(#1d1d1f, #f5f5f7);
+  --ink-80: light-dark(#333333, #cccccc);
+  --ink-48: light-dark(#6e6e73, #8a8a8e);
+  --hairline: light-dark(#e0e0e0, #3a3a3c);
+  --divider: light-dark(#f0f0f0, #2a2a2c);
+  --primary: light-dark(#0066cc, #2997ff);
+  --primary-focus: light-dark(#0071e3, #2997ff);
+  --danger: light-dark(#d70015, #ff6961);
+}
+
+:root[data-color-mode="light"] {
+  color-scheme: light;
+}
+
+:root[data-color-mode="dark"] {
+  color-scheme: dark;
 }
 
 @theme inline {
