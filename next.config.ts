@@ -1,5 +1,4 @@
 import createMDX from "@next/mdx";
-import rehypeHighlight from "rehype-highlight";
 
 // const isGithubActions = process.env.GITHUB_ACTIONS || false;
 // const basePath = isGithubActions ? "/himchan-version2" : "";
@@ -29,7 +28,7 @@ const nextConfig = {
 const withMDX = createMDX({
   options: {
     remarkPlugins: [],
-    rehypePlugins: [rehypeHighlight],
+    rehypePlugins: ["rehype-highlight"],
   },
 });
 
