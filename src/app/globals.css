@@ -1,44 +1,244 @@
 @import "tailwindcss";
 
+/* DESIGN.md 토큰. 다크는 prefers-color-scheme으로 같은 변수를 바꿔 끼워 컴포넌트에서 dark: 분기를 없앤다. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --canvas: #ffffff;
+  --parchment: #f5f5f7;
+  --pearl: #fafafc;
+  --ink: #1d1d1f;
+  --ink-80: #333333;
+  --ink-48: #6e6e73;
+  --hairline: #e0e0e0;
+  --divider: #f0f0f0;
+  --primary: #0066cc;
+  --primary-focus: #0071e3;
+  --danger: #d70015;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --canvas: #000000;
+    --parchment: #1d1d1f;
+    --pearl: #2a2a2c;
+    --ink: #f5f5f7;
+    --ink-80: #cccccc;
+    --ink-48: #8a8a8e;
+    --hairline: #3a3a3c;
+    --divider: #2a2a2c;
+    --primary: #2997ff;
+    --primary-focus: #2997ff;
+    --danger: #ff6961;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-parchment: var(--parchment);
+  --color-pearl: var(--pearl);
+  --color-ink: var(--ink);
+  --color-ink-80: var(--ink-80);
+  --color-ink-48: var(--ink-48);
+  --color-hairline: var(--hairline);
+  --color-divider: var(--divider);
+  --color-primary: var(--primary);
+  --color-primary-focus: var(--primary-focus);
+  --color-danger: var(--danger);
+  /* 다크 타일·글로벌 내비는 모드와 무관하게 항상 어둡다. */
+  --color-tile: #272729;
+  --color-on-dark: #ffffff;
+  --color-primary-on-dark: #2997ff;
 }
 
-/*
+@theme {
+  /* SF Pro에는 한글이 없어 Apple SD Gothic Neo를 바로 뒤에 둔다. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
 
-Style with support for rainbow parens
+  --text-hero: 56px;
+  --text-hero--line-height: 1.07;
+  --text-hero--letter-spacing: -0.28px;
+  --text-display-lg: 40px;
+  --text-display-lg--line-height: 1.1;
+  --text-display-lg--letter-spacing: -0.28px;
+  --text-display-md: 34px;
+  --text-display-md--line-height: 1.2;
+  --text-display-md--letter-spacing: -0.374px;
+  --text-lead: 28px;
+  --text-lead--line-height: 1.14;
+  --text-lead--letter-spacing: 0.196px;
+  --text-lead-airy: 24px;
+  --text-lead-airy--line-height: 1.5;
+  --text-tagline: 21px;
+  --text-tagline--line-height: 1.19;
+  --text-tagline--letter-spacing: 0.231px;
+  --text-body: 17px;
+  --text-body--line-height: 1.47;
+  --text-body--letter-spacing: -0.374px;
+  --text-caption: 14px;
+  --text-caption--line-height: 1.43;
+  --text-caption--letter-spacing: -0.224px;
+  --text-fine: 12px;
+  --text-fine--line-height: 1.33;
+  --text-fine--letter-spacing: -0.12px;
 
-*/
+  --radius-xs: 5px;
+  --radius-sm: 8px;
+  --radius-md: 11px;
+  --radius-lg: 18px;
 
+  --shadow-product: 3px 5px 30px 0 rgba(0, 0, 0, 0.22);
+
+  --container-text: 980px;
+  --container-reading: 700px;
+  --container-grid: 1440px;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  letter-spacing: var(--text-body--letter-spacing);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary-focus);
+  outline-offset: 2px;
+}
+
+@layer components {
+  /* 버튼 누름은 색 변화 대신 scale(0.95) 하나로 통일한다. */
+  .btn-primary,
+  .btn-secondary,
+  .btn-utility,
+  .btn-pearl {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .btn-primary:active,
+  .btn-secondary:active,
+  .btn-utility:active,
+  .btn-pearl:active {
+    transform: scale(0.95);
+  }
+  .btn-primary:disabled,
+  .btn-secondary:disabled,
+  .btn-utility:disabled,
+  .btn-pearl:disabled {
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
+  }
+  /* 다크의 --primary(#2997ff)는 흰 글자 대비가 3:1이라 버튼 배경은 Action Blue로 고정한다. */
+  .btn-primary {
+    border-radius: 9999px;
+    background: #0066cc;
+    color: #ffffff;
+    padding: 11px 22px;
+    font-size: var(--text-body);
+    line-height: 1.18;
+  }
+  .btn-secondary {
+    border-radius: 9999px;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 10px 21px;
+    font-size: var(--text-body);
+    line-height: 1.18;
+  }
+  .btn-utility {
+    border-radius: var(--radius-sm);
+    background: var(--ink);
+    color: var(--canvas);
+    padding: 8px 15px;
+    font-size: var(--text-caption);
+    line-height: 1.29;
+    letter-spacing: -0.224px;
+  }
+  .btn-pearl {
+    border-radius: var(--radius-md);
+    background: var(--pearl);
+    color: var(--ink-80);
+    border: 3px solid var(--divider);
+    padding: 5px 11px;
+    font-size: var(--text-caption);
+    letter-spacing: -0.224px;
+  }
+
+  .text-link {
+    color: var(--primary);
+  }
+  .text-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* store-utility-card: 그림자 없이 hairline만 */
+  .card {
+    background: var(--canvas);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    border: 1px solid var(--hairline);
+    background: var(--canvas);
+    color: var(--ink);
+    padding: 4px 12px;
+    font-size: var(--text-caption);
+    letter-spacing: -0.224px;
+  }
+
+  .input {
+    width: 100%;
+    background: var(--canvas);
+    color: var(--ink);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: var(--text-body);
+  }
+  .input:focus {
+    outline: 2px solid var(--primary-focus);
+    outline-offset: 0;
+    border-color: transparent;
+  }
+
+  /* 풀블리드 타일: 모서리 없음, 색 전환이 곧 구분선 */
+  .tile {
+    padding-block: 80px;
+  }
+  .tile-parchment {
+    padding-block: 80px;
+    background: var(--parchment);
+  }
+  @media (max-width: 734px) {
+    .tile,
+    .tile-parchment {
+      padding-block: 48px;
+    }
+  }
+}
+
+/* 코드 블록은 항상 어두운 타일(#272729) 위에 놓이므로 라이트·다크 모두 같은 팔레트를 쓴다. */
 .hljs {
-  background: #474949;
-  color: #d1d9e1;
+  background: transparent;
+  color: #e5e5ea;
 }
 
 .hljs-comment,
 .hljs-quote {
-  color: #969896;
+  color: #8e8e93;
   font-style: italic;
 }
 
@@ -47,26 +247,31 @@ Style with support for rainbow parens
 .hljs-literal,
 .hljs-type,
 .hljs-addition {
-  color: #cc99cc;
+  color: #c39bd3;
 }
 
 .hljs-number,
 .hljs-selector-attr,
-.hljs-selector-pseudo {
-  color: #f99157;
+.hljs-selector-pseudo,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst,
+.hljs-meta,
+.hljs-link {
+  color: #f0a878;
 }
 
 .hljs-string,
 .hljs-doctag,
 .hljs-regexp {
-  color: #8abeb7;
+  color: #8fcfbf;
 }
 
 .hljs-title,
 .hljs-name,
 .hljs-section,
 .hljs-built_in {
-  color: #b5bd68;
+  color: #a8d08d;
 }
 
 .hljs-variable,
@@ -74,34 +279,22 @@ Style with support for rainbow parens
 .hljs-selector-id,
 .hljs-title.class_,
 .hljs-class .hljs-title {
-  color: #ffcc66;
+  color: #f2cc7a;
+}
+
+.hljs-attr,
+.hljs-attribute {
+  color: #7fb2f0;
 }
 
 .hljs-section,
 .hljs-name,
 .hljs-strong {
-  font-weight: bold;
-}
-
-.hljs-symbol,
-.hljs-bullet,
-.hljs-subst,
-.hljs-meta,
-.hljs-link {
-  color: #f99157;
+  font-weight: 600;
 }
 
 .hljs-deletion {
-  color: #dc322f;
-}
-
-.hljs-formula {
-  background: #eee8d5;
-}
-
-.hljs-attr,
-.hljs-attribute {
-  color: #81a2be;
+  color: #ff6b6b;
 }
 
 .hljs-emphasis {

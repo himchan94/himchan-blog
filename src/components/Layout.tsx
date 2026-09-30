@@ -28,7 +28,7 @@ export default function Layout({ children }: LayoutProps) {
   }, [isMenuOpen]);
 
   return (
-    <div className='min-h-screen bg-gray-50 dark:bg-gray-900'>
+    <div className='min-h-screen bg-canvas text-ink'>
       {/* 배경 오버레이 */}
       <div
         className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-20 transition-opacity duration-300 md:hidden ${
@@ -37,21 +37,19 @@ export default function Layout({ children }: LayoutProps) {
         onClick={toggleMenu}
       />
 
-      <header className='sticky top-0 z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700'>
-        <nav className='container mx-auto px-4 py-4'>
-          <div className='flex items-center justify-between'>
+      <header className='sticky top-0 z-10 bg-tile text-on-dark'>
+        <nav className='mx-auto max-w-grid px-5'>
+          <div className='flex h-11 items-center justify-between'>
             <Link
               href='/'
-              className='group relative flex items-center space-x-2 text-2xl font-black tracking-tight'>
-              <span className='bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent transition-all duration-300 ease-out group-hover:tracking-widest'>
-                DEVHIMCHAN
-              </span>
+              className='font-display text-tagline font-semibold tracking-tight text-on-dark'>
+              DEVHIMCHAN
             </Link>
 
             {/* 햄버거 메뉴 버튼 (모바일) */}
             <button
               onClick={toggleMenu}
-              className='md:hidden text-gray-600 dark:text-gray-300 focus:outline-none z-30 relative'
+              className='md:hidden -m-2 p-2 text-on-dark z-30 relative'
               aria-label='메뉴 열기'>
               {isMenuOpen ? (
                 <svg
@@ -83,32 +81,32 @@ export default function Layout({ children }: LayoutProps) {
             </button>
 
             {/* 데스크탑 메뉴 */}
-            <ul className='hidden md:flex items-center space-x-8'>
+            <ul className='hidden md:flex items-center gap-8 text-caption'>
               <li>
                 <Link
                   href='/'
-                  className='text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
+                  className='text-on-dark hover:text-primary-on-dark transition-colors'>
                   HOME
                 </Link>
               </li>
               <li>
                 <Link
                   href='/about'
-                  className='text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
+                  className='text-on-dark hover:text-primary-on-dark transition-colors'>
                   ABOUT
                 </Link>
               </li>
               <li>
                 <Link
                   href='/blog'
-                  className='text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
+                  className='text-on-dark hover:text-primary-on-dark transition-colors'>
                   BLOG
                 </Link>
               </li>
               <li>
                 <Link
                   href='/projects'
-                  className='text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
+                  className='text-on-dark hover:text-primary-on-dark transition-colors'>
                   PROJECTS
                 </Link>
               </li>
@@ -117,7 +115,7 @@ export default function Layout({ children }: LayoutProps) {
                   href={GITHUB_URL}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
+                  className='text-on-dark hover:text-primary-on-dark transition-colors'>
                   <svg
                     className='w-6 h-6'
                     fill='currentColor'
@@ -138,14 +136,14 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* 모바일 사이드 네비게이션 */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 bg-white dark:bg-gray-800 shadow-2xl z-30 transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed top-0 right-0 h-full w-72 bg-tile text-on-dark z-30 transform transition-transform duration-300 ease-in-out md:hidden ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}>
         <div className='p-6 h-full flex flex-col'>
           <div className='flex justify-end mb-8'>
             <button
               onClick={toggleMenu}
-              className='text-gray-600 dark:text-gray-300 focus:outline-none hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
+              className='text-on-dark hover:text-primary-on-dark transition-colors'>
               <svg
                 className='w-6 h-6'
                 fill='none'
@@ -161,17 +159,17 @@ export default function Layout({ children }: LayoutProps) {
             </button>
           </div>
 
-          <div className='border-b border-gray-200 dark:border-gray-700 pb-4 mb-4'>
-            <span className='text-lg font-bold text-gray-800 dark:text-gray-200'>
+          <div className='border-b border-white/15 pb-4 mb-4'>
+            <span className='text-tagline font-semibold text-on-dark'>
               메뉴
             </span>
           </div>
 
-          <ul className='flex flex-col space-y-4 text-lg'>
+          <ul className='flex flex-col space-y-4 text-body'>
             <li>
               <Link
                 href='/'
-                className='flex items-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2'
+                className='flex items-center text-on-dark hover:text-primary-on-dark transition-colors py-2'
                 onClick={toggleMenu}>
                 <svg
                   className='w-5 h-5 mr-3'
@@ -191,7 +189,7 @@ export default function Layout({ children }: LayoutProps) {
             <li>
               <Link
                 href='/about'
-                className='flex items-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2'
+                className='flex items-center text-on-dark hover:text-primary-on-dark transition-colors py-2'
                 onClick={toggleMenu}>
                 <svg
                   className='w-5 h-5 mr-3'
@@ -211,7 +209,7 @@ export default function Layout({ children }: LayoutProps) {
             <li>
               <Link
                 href='/blog'
-                className='flex items-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2'
+                className='flex items-center text-on-dark hover:text-primary-on-dark transition-colors py-2'
                 onClick={toggleMenu}>
                 <svg
                   className='w-5 h-5 mr-3'
@@ -231,7 +229,7 @@ export default function Layout({ children }: LayoutProps) {
             <li>
               <Link
                 href='/projects'
-                className='flex items-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2'
+                className='flex items-center text-on-dark hover:text-primary-on-dark transition-colors py-2'
                 onClick={toggleMenu}>
                 <svg
                   className='w-5 h-5 mr-3'
@@ -250,13 +248,13 @@ export default function Layout({ children }: LayoutProps) {
             </li>
           </ul>
 
-          <div className='mt-auto pt-6 border-t border-gray-200 dark:border-gray-700'>
+          <div className='mt-auto pt-6 border-t border-white/15'>
             <div className='flex space-x-4'>
               <a
                 href={GITHUB_URL}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
+                className='text-on-dark hover:text-primary-on-dark transition-colors'>
                 <svg
                   className='w-6 h-6'
                   fill='currentColor'
@@ -271,7 +269,7 @@ export default function Layout({ children }: LayoutProps) {
               </a>
               <a
                 href={`mailto:${EMAIL}`}
-                className='text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
+                className='text-on-dark hover:text-primary-on-dark transition-colors'>
                 <svg
                   className='w-6 h-6'
                   fill='none'
@@ -290,11 +288,11 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </div>
 
-      <main className='container mx-auto px-4 py-12'>{children}</main>
-      <footer className='bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700'>
-        <div className='container mx-auto px-4 py-8'>
+      <main>{children}</main>
+      <footer className='bg-parchment text-ink-80'>
+        <div className='mx-auto max-w-text px-5 py-10'>
           <div className='flex flex-col items-center justify-center space-y-4'>
-            <span className='text-gray-600 dark:text-gray-400'>
+            <span className='text-fine text-ink-48'>
               © {2025} devhimchan. All Rights Reserved.
             </span>
             {/* 소셜 링크 */}
@@ -303,9 +301,9 @@ export default function Layout({ children }: LayoutProps) {
                 href={GITHUB_URL}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='group flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
+                className='group flex items-center gap-2 text-caption text-ink-80 hover:text-primary transition-colors'>
                 <svg
-                  className='w-6 h-6 transition-transform group-hover:scale-110'
+                  className='w-6 h-6'
                   fill='currentColor'
                   viewBox='0 0 24 24'>
                   <path
@@ -314,13 +312,13 @@ export default function Layout({ children }: LayoutProps) {
                     clipRule='evenodd'
                   />
                 </svg>
-                <span className='font-medium'>GitHub</span>
+                <span>GitHub</span>
               </a>
               <a
                 href={`mailto:${EMAIL}`}
-                className='group flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'>
+                className='group flex items-center gap-2 text-caption text-ink-80 hover:text-primary transition-colors'>
                 <svg
-                  className='w-6 h-6 transition-transform group-hover:scale-110'
+                  className='w-6 h-6'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'>
@@ -331,7 +329,7 @@ export default function Layout({ children }: LayoutProps) {
                     d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
                   />
                 </svg>
-                <span className='font-medium'>EMAIL</span>
+                <span>EMAIL</span>
               </a>
             </div>
           </div>

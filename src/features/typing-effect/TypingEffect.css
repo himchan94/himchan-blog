@@ -1,5 +1,4 @@
 :root {
-  --bg-color: hsl(49 37% 94%);
   --typewriterSpeed: 6s;
   --typewriteCharacter: 24;
 }
@@ -11,7 +10,7 @@
   display: grid;
   place-content: center;
   text-align: center;
-  background: var(--bg-color);
+  background: var(--canvas);
 }
 
 .body h1 {
@@ -20,7 +19,7 @@
   font-family: monospace;
   /* outline: 1px solid black; */
   width: max-content;
-  color: #161616;
+  color: var(--ink);
   /* 성능 최적화를 위한 will-change */
   will-change: contents;
 }
@@ -38,21 +37,21 @@
 }
 
 .body h1::before {
-  background: var(--bg-color);
+  background: var(--canvas);
   animation: typewriter var(--typewriterSpeed) steps(var(--typewriteCharacter))
     1s forwards;
 }
 
 .body h1::after {
   width: 0.125em;
-  background: black;
+  background: var(--ink);
   animation: typewriter var(--typewriterSpeed) steps(var(--typewriteCharacter))
       1s forwards,
     blink 500ms steps(var(--typewriteCharacter)) infinite;
 }
 
 .body .subtitle {
-  color: hsl(0 0% 0% / 0.7);
+  color: var(--ink-80);
   font-size: 2rem;
   font-weight: 400;
   opacity: 0;
@@ -70,8 +69,8 @@
   min-height: 200px;
   font-family: monospace;
   font-size: 1.5rem;
-  color: #161616;
-  background: var(--bg-color);
+  color: var(--ink);
+  background: var(--canvas);
   /* 로딩 애니메이션 */
   animation: pulse 1s ease-in-out infinite alternate;
 }

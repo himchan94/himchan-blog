@@ -12,17 +12,17 @@ export default async function AdminLayout({
   const session = await requireAdmin();
 
   return (
-    <div className='min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100'>
-      <header className='border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'>
-        <nav className='max-w-5xl mx-auto px-4 py-3 flex items-center gap-6'>
-          <Link href='/admin' className='font-black'>
+    <div className='min-h-screen bg-parchment text-ink'>
+      <header className='border-b border-hairline bg-canvas'>
+        <nav className='max-w-5xl mx-auto px-4 py-3 flex items-center gap-6 text-caption text-ink-80'>
+          <Link href='/admin' className='font-semibold text-ink'>
             ADMIN
           </Link>
           <Link href='/admin/posts'>Posts</Link>
           <Link href='/admin/series'>Series</Link>
           <Link href='/admin/projects'>Projects</Link>
           <Link href='/admin/about'>About</Link>
-          <Link href='/' className='ml-auto text-sm text-gray-500'>
+          <Link href='/' className='ml-auto text-ink-48 hover:text-ink'>
             사이트 보기
           </Link>
           <form
@@ -30,7 +30,7 @@ export default async function AdminLayout({
               "use server";
               await signOut({ redirectTo: "/" });
             }}>
-            <button className='text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white'>
+            <button className='btn-utility'>
               {session.user?.name ?? "관리자"} · 로그아웃
             </button>
           </form>

@@ -7,29 +7,37 @@ export default async function Blog() {
   const categories = [...new Set(posts.flatMap((post) => post.category ?? []))].sort();
 
   return (
-    <div className='max-w-4xl mx-auto'>
-      <h1 className='text-4xl font-bold mb-8 text-gray-900 dark:text-white'>
-        Blog Posts
-      </h1>
-      {categories.length > 0 && (
-        <div className='mb-8 flex flex-wrap gap-2'>
-          {categories.map((cat) => (
-            <Link
-              key={cat}
-              href={`/blog/category/${encodeURIComponent(cat)}`}
-              className='px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800'>
-              {cat}
-            </Link>
-          ))}
+    <>
+      <section className='tile-parchment'>
+        <div className='mx-auto max-w-text px-5 text-center'>
+          <h1 className='font-display text-display-lg font-semibold text-ink'>
+            Blog Posts
+          </h1>
+          {categories.length > 0 && (
+            <div className='mt-8 flex flex-wrap justify-center gap-2'>
+              {categories.map((cat) => (
+                <Link
+                  key={cat}
+                  href={`/blog/category/${encodeURIComponent(cat)}`}
+                  className='chip hover:border-primary hover:text-primary'>
+                  {cat}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-      {posts.length > 0 ? (
-        <PostList posts={posts} />
-      ) : (
-        <p className='text-gray-600 dark:text-gray-400 text-center py-12'>
-          아직 작성된 포스트가 없습니다.
-        </p>
-      )}
-    </div>
+      </section>
+      <section className='tile'>
+        <div className='mx-auto max-w-text px-5'>
+          {posts.length > 0 ? (
+            <PostList posts={posts} />
+          ) : (
+            <p className='py-12 text-center text-body text-ink-48'>
+              아직 작성된 포스트가 없습니다.
+            </p>
+          )}
+        </div>
+      </section>
+    </>
   );
 }

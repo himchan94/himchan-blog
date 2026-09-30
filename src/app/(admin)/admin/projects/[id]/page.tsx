@@ -14,7 +14,7 @@ export default async function EditProject({ params }: { params: Promise<{ id: st
 
   return (
     <div className='space-y-4'>
-      <h1 className='text-2xl font-bold'>프로젝트 수정</h1>
+      <h1 className='text-tagline font-semibold'>프로젝트 수정</h1>
       <ProjectForm project={project} />
     </div>
   );

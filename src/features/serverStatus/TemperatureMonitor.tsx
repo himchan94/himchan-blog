@@ -51,7 +51,7 @@ export default function TemperatureMonitor() {
     };
   }, []);
 
-  if (error) return <div className='text-red-500'>❌ {error}</div>;
+  if (error) return <div className='text-danger'>❌ {error}</div>;
   if (!data) return <div>📡 센서 데이터 수신 중...</div>;
 
   return (

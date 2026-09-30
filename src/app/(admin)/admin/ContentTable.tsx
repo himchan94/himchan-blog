@@ -15,35 +15,39 @@ export default function ContentTable({
   return (
     <div className='space-y-4'>
       <div className='flex items-center justify-between'>
-        <h1 className='text-2xl font-bold'>{title}</h1>
-        <Link href={`${basePath}/new`} className='rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700'>
+        <h1 className='text-tagline font-semibold'>{title}</h1>
+        <Link href={`${basePath}/new`} className='btn-utility'>
           새로 쓰기
         </Link>
       </div>
-      <table className='w-full text-left text-sm'>
-        <thead className='border-b border-gray-200 dark:border-gray-700 text-gray-500'>
-          <tr>
-            <th className='py-2'>제목</th>
-            <th>slug</th>
-            <th>상태</th>
-            <th>발행일</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.id} className='border-b border-gray-100 dark:border-gray-800'>
-              <td className='py-2'>
-                <Link href={`${basePath}/${row.id}`} className='font-medium hover:underline'>
-                  {row.title}
-                </Link>
-              </td>
-              <td className='text-gray-500'>{row.slug}</td>
-              <td>{row.status === "PUBLISHED" ? "공개" : "임시저장"}</td>
-              <td className='text-gray-500'>{row.publishedAt?.toISOString().slice(0, 10) ?? "-"}</td>
+      <div className='card overflow-x-auto p-0'>
+        <table className='w-full text-left text-caption'>
+          <thead className='border-b border-hairline text-ink-48'>
+            <tr>
+              <th className='px-4 py-3 font-semibold'>제목</th>
+              <th className='px-4 py-3 font-semibold'>slug</th>
+              <th className='px-4 py-3 font-semibold'>상태</th>
+              <th className='px-4 py-3 font-semibold'>발행일</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.id} className='border-b border-divider last:border-b-0'>
+                <td className='px-4 py-3'>
+                  <Link href={`${basePath}/${row.id}`} className='font-semibold text-link'>
+                    {row.title}
+                  </Link>
+                </td>
+                <td className='px-4 py-3 text-ink-48'>{row.slug}</td>
+                <td className='px-4 py-3'>
+                  <span className='chip'>{row.status === "PUBLISHED" ? "공개" : "임시저장"}</span>
+                </td>
+                <td className='px-4 py-3 text-ink-48'>{row.publishedAt?.toISOString().slice(0, 10) ?? "-"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

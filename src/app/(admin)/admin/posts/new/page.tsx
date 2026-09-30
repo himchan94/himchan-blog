@@ -11,7 +11,7 @@ export default async function NewPost() {
 
   return (
     <div className='space-y-4'>
-      <h1 className='text-2xl font-bold'>새 글</h1>
+      <h1 className='text-tagline font-semibold'>새 글</h1>
       <PostForm seriesOptions={seriesOptions} />
     </div>
   );

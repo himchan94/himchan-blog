@@ -17,7 +17,7 @@ export default async function EditPost({ params }: { params: Promise<{ id: strin
 
   return (
     <div className='space-y-4'>
-      <h1 className='text-2xl font-bold'>글 수정</h1>
+      <h1 className='text-tagline font-semibold'>글 수정</h1>
       <PostForm post={post} seriesOptions={seriesOptions} />
     </div>
   );

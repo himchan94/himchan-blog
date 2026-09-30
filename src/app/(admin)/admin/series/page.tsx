@@ -11,7 +11,7 @@ export default async function AdminSeries() {
 
   return (
     <div className='space-y-4'>
-      <h1 className='text-2xl font-bold'>Series</h1>
+      <h1 className='text-tagline font-semibold'>Series</h1>
       <SeriesForm key='new' />
       {rows.map((row) => (
         <SeriesForm

@@ -5,12 +5,12 @@ import type { Status } from "@/generated/prisma/client";
 import MarkdownField from "./MarkdownField";
 
 export const inputClass =
-  "w-full rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2";
+  "input";
 
 export function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className='block space-y-1'>
-      <span className='text-sm font-medium'>{label}</span>
+      <span className='text-caption font-semibold text-ink-80'>{label}</span>
       {children}
     </label>
   );
@@ -92,7 +92,7 @@ export function FormFooter({
       <button
         type='submit'
         disabled={pending}
-        className='rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50'>
+        className='btn-primary'>
         {pending ? "저장 중…" : "저장"}
       </button>
       {deleteAction && (
@@ -103,12 +103,12 @@ export function FormFooter({
           onClick={(event) => {
             if (!confirm("삭제할까요? 되돌릴 수 없습니다.")) event.preventDefault();
           }}
-          className='rounded border border-red-600 px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30'>
+          className='btn-pearl !text-danger'>
           삭제
         </button>
       )}
-      {message && <p className='text-sm text-green-600'>{message}</p>}
-      {error && <p className='w-full whitespace-pre-wrap text-sm text-red-600'>{error}</p>}
+      {message && <p className='text-caption text-ink-80'>{message}</p>}
+      {error && <p className='w-full whitespace-pre-wrap text-caption text-danger'>{error}</p>}
     </div>
   );
 }

@@ -11,17 +11,17 @@ export default async function AdminHome() {
 
   return (
     <div className='grid gap-4 sm:grid-cols-3'>
-      <Link href='/admin/posts' className='rounded-lg bg-white dark:bg-gray-800 p-6 shadow-sm'>
-        <p className='text-sm text-gray-500'>Posts</p>
-        <p className='text-3xl font-bold'>{posts}</p>
+      <Link href='/admin/posts' className='card'>
+        <p className='text-caption text-ink-48'>Posts</p>
+        <p className='text-display-md font-semibold'>{posts}</p>
       </Link>
-      <Link href='/admin/projects' className='rounded-lg bg-white dark:bg-gray-800 p-6 shadow-sm'>
-        <p className='text-sm text-gray-500'>Projects</p>
-        <p className='text-3xl font-bold'>{projects}</p>
+      <Link href='/admin/projects' className='card'>
+        <p className='text-caption text-ink-48'>Projects</p>
+        <p className='text-display-md font-semibold'>{projects}</p>
       </Link>
-      <Link href='/admin/about' className='rounded-lg bg-white dark:bg-gray-800 p-6 shadow-sm'>
-        <p className='text-sm text-gray-500'>About</p>
-        <p className='text-3xl font-bold'>편집</p>
+      <Link href='/admin/about' className='card'>
+        <p className='text-caption text-ink-48'>About</p>
+        <p className='text-display-md font-semibold'>편집</p>
       </Link>
     </div>
   );

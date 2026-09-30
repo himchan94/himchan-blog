@@ -2,7 +2,7 @@
 
 himchan-blog — Next.js + MDX 개인 블로그.
 
-결정 배경은 [`docs/adr/`](docs/adr/), 도메인 불변식은 [`docs/domain/`](docs/domain/).
+UI 규칙은 [`DESIGN.md`](DESIGN.md), 결정 배경은 [`docs/adr/`](docs/adr/), 도메인 불변식은 [`docs/domain/`](docs/domain/).
 여기 없는 것은 코드가 진실이다.
 
 ## 행동 지침

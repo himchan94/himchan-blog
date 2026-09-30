@@ -8,7 +8,7 @@ export default async function AdminAbout() {
 
   return (
     <div className='space-y-4'>
-      <h1 className='text-2xl font-bold'>About</h1>
+      <h1 className='text-tagline font-semibold'>About</h1>
       <AboutForm content={about?.content ?? ""} />
     </div>
   );

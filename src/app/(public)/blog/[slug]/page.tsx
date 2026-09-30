@@ -18,14 +18,14 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   return (
-    <div className='max-w-4xl mx-auto px-4 py-16'>
+    <div className='mx-auto max-w-text px-5 py-16'>
       <article>
-        <header className='mb-16 text-center'>
-          <h1 className='text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent'>
+        <header className='mb-12 text-center'>
+          <h1 className='font-display text-display-md font-semibold text-ink sm:text-display-lg'>
             {post.title}
           </h1>
-          <div className='flex items-center justify-center space-x-4 text-gray-500 dark:text-gray-400'>
-            <time className='font-medium'>
+          <div className='mt-4 flex items-center justify-center gap-3 text-caption text-ink-48'>
+            <time>
               {new Date(post.date).toLocaleDateString("ko-KR", {
                 year: "numeric",
                 month: "long",
@@ -33,7 +33,7 @@ export default async function PostPage({ params }: PostPageProps) {
               })}
             </time>
             <span>•</span>
-            <span className='font-medium'>DEVHIMCHAN</span>
+            <span>DEVHIMCHAN</span>
             <span>•</span>
             <span>조회 {post.views.toLocaleString("ko-KR")}</span>
           </div>
@@ -43,42 +43,42 @@ export default async function PostPage({ params }: PostPageProps) {
                 <Link
                   key={cat}
                   href={`/blog/category/${encodeURIComponent(cat)}`}
-                  className='px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800'>
+                  className='chip hover:border-primary hover:text-primary'>
                   {cat}
                 </Link>
               ))}
             </div>
           )}
         </header>
-        {post.series && (
-          <nav className='mb-12 rounded-xl border border-gray-200 dark:border-gray-700 p-6'>
-            <p className='mb-3 font-bold text-gray-900 dark:text-white'>{post.series.title}</p>
-            <ol className='space-y-1 text-sm'>
-              {post.series.posts.map((item) => (
-                <li key={item.slug}>
-                  {item.slug === post.slug ? (
-                    <span className='font-medium text-blue-600 dark:text-blue-400'>
-                      {item.order}. {item.title}
-                    </span>
-                  ) : (
-                    <Link href={`/blog/${item.slug}`} className='text-gray-600 dark:text-gray-400 hover:underline'>
-                      {item.order}. {item.title}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </nav>
-        )}
-        <div className='prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-img:rounded-xl prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-800'>
+        <div className='mx-auto max-w-reading'>
+          {post.series && (
+            <nav className='card mb-12'>
+              <p className='mb-3 text-body font-semibold text-ink'>{post.series.title}</p>
+              <ol className='space-y-1 text-caption'>
+                {post.series.posts.map((item) => (
+                  <li key={item.slug}>
+                    {item.slug === post.slug ? (
+                      <span className='font-semibold text-primary'>
+                        {item.order}. {item.title}
+                      </span>
+                    ) : (
+                      <Link href={`/blog/${item.slug}`} className='text-ink-80 hover:text-primary'>
+                        {item.order}. {item.title}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )}
           <MDXContent source={post.content} />
         </div>
         <ViewTracker slug={post.slug} />
-        <footer className='mt-16 pt-8 border-t border-gray-200 dark:border-gray-700'>
+        <footer className='mx-auto mt-16 max-w-reading border-t border-hairline pt-8'>
           <div className='flex flex-col sm:flex-row justify-between items-center gap-4'>
             <Link
               href='/blog'
-              className='group inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors'>
+              className='group text-link inline-flex items-center text-body'>
               <svg
                 className='w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform'
                 fill='none'
@@ -93,37 +93,6 @@ export default async function PostPage({ params }: PostPageProps) {
               </svg>
               목록으로 돌아가기
             </Link>
-            {/* <a
-              href={`https://github.com/devhimchan/blog/edit/main/src/content/posts/${params.slug}.mdx`}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='group inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors'>
-              <svg
-                className='w-5 h-5 mr-2'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'>
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'
-                />
-              </svg>
-              GitHub에서 수정하기
-              <svg
-                className='w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'>
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M9 5l7 7-7 7'
-                />
-              </svg>
-            </a> */}
           </div>
         </footer>
       </article>
