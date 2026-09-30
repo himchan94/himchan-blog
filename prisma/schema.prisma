@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  description String
+  content     String
+  categories  String[]
+  status      Status    @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status, publishedAt])
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  description String
+  content     String
+  thumbnail   String?
+  github      String?
+  demo        String?
+  tech        String[]
+  status      Status    @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status, publishedAt])
+}
+
+model Page {
+  key       String   @id
+  content   String
+  updatedAt DateTime @updatedAt
+}

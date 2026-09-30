@@ -42,3 +42,9 @@ next-env.d.ts
 
 # AI
 .omc
+
+# env example
+!.env.example
+
+# prisma client
+/src/generated/

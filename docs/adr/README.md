@@ -54,4 +54,5 @@ ADR은 그 소실을 막는 자리다 — 다른 문서가 "지금 무엇인가"
 
 | # | 결정 | Status | 도메인 |
 |---|------|--------|--------|
-| *(아직 없음)* | | | |
+| [0001](0001-postgresql-prisma.md) | 콘텐츠 저장소를 PostgreSQL + Prisma 7로 옮긴다 | Accepted | platform |
+| [0002](0002-content-data-model.md) | 콘텐츠 데이터 모델 — Post/Project/Page, 카테고리는 배열, 인증 테이블 없음 | Accepted | platform |
