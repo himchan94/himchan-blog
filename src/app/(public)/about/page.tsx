@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { isMock, mockAbout } from "@/mocks";
 import MDXContent from "@/components/mdx/MDXContent";
 import ProfileImage from "@/components/ProfileImage";
 
 export default async function About() {
-  const about = await prisma.page.findUnique({ where: { key: "about" } });
+  const about = isMock ? mockAbout : await prisma.page.findUnique({ where: { key: "about" } });
 
   if (!about) {
     notFound();

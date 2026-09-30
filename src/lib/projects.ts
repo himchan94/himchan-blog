@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { isMock, mockProjects } from "@/mocks";
 import type { Project as ProjectRow } from "@/generated/prisma/client";
 
 export type ProjectSummary = Omit<Project, "content">;
@@ -29,6 +30,7 @@ function toSummary(row: Omit<ProjectRow, "content">): ProjectSummary {
 }
 
 export async function getAllProjects(take?: number): Promise<ProjectSummary[]> {
+  if (isMock) return mockProjects.getAll(take);
   const rows = await prisma.project.findMany({
     where: { status: "PUBLISHED" },
     orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
@@ -39,6 +41,7 @@ export async function getAllProjects(take?: number): Promise<ProjectSummary[]> {
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  if (isMock) return mockProjects.getBySlug(slug);
   const row = await prisma.project.findFirst({
     where: { slug, status: "PUBLISHED" },
   });

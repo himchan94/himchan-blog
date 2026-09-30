@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { isMock, mockPosts } from "@/mocks";
 import type { Post as PostRow } from "@/generated/prisma/client";
 
 export interface PostSummary {
@@ -30,6 +31,7 @@ const newestFirst = [{ publishedAt: "desc" }, { createdAt: "desc" }] as const;
 
 // 공개 쿼리는 PUBLISHED만 본다. 발행 시 publishedAt이 채워진다.
 export async function getAllPosts(take?: number): Promise<PostSummary[]> {
+  if (isMock) return mockPosts.getAll(take);
   const rows = await prisma.post.findMany({
     where: { status: "PUBLISHED" },
     orderBy: [...newestFirst],
@@ -40,6 +42,7 @@ export async function getAllPosts(take?: number): Promise<PostSummary[]> {
 }
 
 export async function getPostsByCategory(category: string): Promise<PostSummary[]> {
+  if (isMock) return mockPosts.getByCategory(category);
   const rows = await prisma.post.findMany({
     where: { status: "PUBLISHED", categories: { has: category } },
     orderBy: [...newestFirst],
@@ -49,6 +52,7 @@ export async function getPostsByCategory(category: string): Promise<PostSummary[
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
+  if (isMock) return mockPosts.getBySlug(slug);
   const row = await prisma.post.findFirst({
     where: { slug, status: "PUBLISHED" },
     include: {
@@ -84,6 +88,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
 // 한 문장으로 증가시켜 동시 요청에도 행이 하나로 유지된다. 공개 글이 아니면 아무것도 쓰지 않는다.
 export async function recordPostView(slug: string): Promise<void> {
+  if (isMock) return;
   await prisma.$executeRaw`
     INSERT INTO "PostView" ("postId", "date", "count")
     SELECT "id", (now() AT TIME ZONE 'Asia/Seoul')::date, 1
