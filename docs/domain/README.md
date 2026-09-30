@@ -18,6 +18,7 @@
 
 | 문서 | 소유 코드 | 한 줄 |
 |------|-----------|-------|
+| [admin.md](admin.md) | `src/app/(admin)/admin/`, `src/auth.ts` | 관리자 CRUD와 인증 경계 |
 | [mdx.md](mdx.md) | `src/components/mdx/` | DB의 MDX 본문 렌더링과 컴포넌트 허용 목록 |
 
 ## 새 도메인 문서를 쓸 때
