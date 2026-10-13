@@ -41,14 +41,14 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-blog}:${POSTGRES_PASSWORD:-blog}@postgres:5432/${POSTGRES_DB:-blog}?schema=public
       # 공용 S3 저장소(Garage)는 이 compose 밖에서 돈다. 컨테이너 이름으로 붙는다 (ADR-0009).
-      MINIO_URL: http://garage:3900
+      S3_URL: http://garage:3900
     ports:
       # 호스트 nginx만 붙도록 루프백에 바인딩한다 (ADR-0008).
       - "127.0.0.1:3000:3000"
     depends_on:
       migrate:
         condition: service_completed_successfully
-    networks: [default, postgres, minio]
+    networks: [default, postgres, s3]
     profiles: ["app"]
 
 volumes:
@@ -59,6 +59,6 @@ networks:
   postgres:
     external: true
     name: ${POSTGRES_NETWORK:-postgres}
-  minio:
+  s3:
     external: true
-    name: ${MINIO_NETWORK:-garage}
+    name: ${S3_NETWORK:-garage}

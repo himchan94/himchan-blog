@@ -1,18 +1,18 @@
 import { Client } from "minio";
 
-export const BUCKET = process.env.MINIO_BUCKET || "blog";
+export const BUCKET = process.env.S3_BUCKET || "blog";
 
 // 빌드 중에는 env가 없으므로 요청 시점에 만든다.
 let client: Client | undefined;
 export function storage() {
   if (!client) {
-    const url = new URL(process.env.MINIO_URL || "http://localhost:9000");
+    const url = new URL(process.env.S3_URL || "http://localhost:9000");
     client = new Client({
       endPoint: url.hostname,
       port: Number(url.port) || (url.protocol === "https:" ? 443 : 80),
       useSSL: url.protocol === "https:",
-      accessKey: process.env.MINIO_ACCESS_KEY ?? "",
-      secretKey: process.env.MINIO_SECRET_KEY ?? "",
+      accessKey: process.env.S3_ACCESS_KEY ?? "",
+      secretKey: process.env.S3_SECRET_KEY ?? "",
     });
   }
   return client;

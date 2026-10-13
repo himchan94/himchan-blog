@@ -20,7 +20,7 @@ npx prisma migrate deploy
 npm run dev
 ```
 
-- 이미지 업로드는 S3 호환 저장소가 필요하다. 로컬에 띄운 저장소(Garage·MinIO 등)의 버킷·키를 `MINIO_*`에 넣는다.
+- 이미지 업로드는 S3 호환 저장소가 필요하다. 로컬에 띄운 저장소(Garage·MinIO 등)의 버킷·키를 `S3_*`에 넣는다.
 - 공개 사이트: http://localhost:3000
 - 관리자: http://localhost:3000/admin
   - GitHub OAuth App의 callback URL은 `http://localhost:3000/api/auth/callback/github`로 등록한다.
@@ -50,7 +50,7 @@ docs/domain/             # 도메인별 불변식과 함정
 - 공용 Postgres(`/srv/infra/postgres`)가 외부 network `postgres`에 떠 있어야 한다 ([ADR-0008](docs/adr/0008-shared-postgres-host-nginx.md)).
   블로그 전용 계정과 DB를 만들고 `.env`의 `POSTGRES_USER`·`POSTGRES_PASSWORD`·`POSTGRES_DB`에 넣는다.
 - 공용 Garage(`/srv/infra/garage`)가 외부 network `garage`에 떠 있어야 한다 ([ADR-0009](docs/adr/0009-garage-instead-of-minio.md)).
-  블로그용 버킷과 그 버킷만 허용한 키를 만들어 `.env`의 `MINIO_*`에 넣는다.
+  블로그용 버킷과 그 버킷만 허용한 키를 만들어 `.env`의 `S3_*`에 넣는다.
 
 ```sql
 CREATE ROLE blog LOGIN PASSWORD '<secret>';
@@ -61,7 +61,7 @@ REVOKE ALL ON DATABASE blog FROM PUBLIC;
 ```bash
 # /srv/infra/garage에서
 docker compose exec garage /garage bucket create blog
-docker compose exec garage /garage key create blog-app       # 출력된 Key ID·Secret을 MINIO_ACCESS_KEY·MINIO_SECRET_KEY에
+docker compose exec garage /garage key create blog-app       # 출력된 Key ID·Secret을 S3_ACCESS_KEY·S3_SECRET_KEY에
 docker compose exec garage /garage bucket allow --read --write blog --key blog-app
 ```
 
