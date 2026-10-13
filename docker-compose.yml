@@ -36,12 +36,20 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-blog}:${POSTGRES_PASSWORD:-blog}@postgres:5432/${POSTGRES_DB:-blog}?schema=public
+      # 공용 MinIO는 이 compose 밖에서 돈다. 컨테이너 이름으로 붙는다 (ADR-0007).
+      MINIO_URL: http://minio:9000
     ports:
       - "3000:3000"
     depends_on:
       migrate:
         condition: service_completed_successfully
+    networks: [default, minio]
     profiles: ["app"]
 
 volumes:
   postgres-data:
+
+networks:
+  minio:
+    external: true
+    name: ${MINIO_NETWORK:-minio}

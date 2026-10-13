@@ -26,6 +26,7 @@ flowchart LR
 - 공개(PUBLISHED)된 항목의 slug는 바뀌지 않는다. 폼은 readOnly, action은 기존 slug를 유지한다.
 - PUBLISHED면 `publishedAt`이 있다. 시리즈에 속한 글(`seriesId`)은 `seriesOrder`도 있다. 둘 다 DB CHECK 제약으로 강제한다.
 - 글이 연결된 시리즈는 삭제되지 않는다(FK Restrict). `SetNull`로 두면 `seriesOrder`만 남아 위 CHECK에 걸린다.
+- 업로드 이미지 키는 `{yyyy}/{mm}/{uuid}.{ext}`이고 한 번 올린 키의 내용은 바뀌지 않는다. `/media/*`는 이 패턴 밖의 키를 404로 막고 `immutable`로 캐시한다 ([ADR-0007](../adr/0007-minio-image-upload.md)).
 - `publishedAt`은 날짜 단위(UTC 자정)다. 공개로 저장할 때 비어 있으면 KST 기준 오늘이 들어간다. 같은 날짜는 `createdAt`으로 정렬한다.
 
 ## 4. 함정
@@ -44,11 +45,13 @@ flowchart LR
 |---|---|
 | `ADMIN_GITHUB_ID` | 관리자 GitHub 숫자 id |
 | `form.ts`의 `readContentFields` | Post·Project 공통 입력 검증 |
+| `storage.ts`의 `IMAGE_TYPES` | 업로드 허용 이미지 형식 (SVG 제외) |
 
 ## 6. 관련 ADR
 
 - [ADR-0005](../adr/0005-authjs-github-allowlist.md) — Auth.js + GitHub allowlist
 - [ADR-0003](../adr/0003-runtime-mdx-rendering.md) — MDX 허용 목록
+- [ADR-0007](../adr/0007-minio-image-upload.md) — MinIO 이미지 업로드
 
 ## 7. 여기 없는 것
 

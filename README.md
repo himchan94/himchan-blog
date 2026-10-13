@@ -20,6 +20,7 @@ npx prisma migrate deploy
 npm run dev
 ```
 
+- 이미지 업로드는 MinIO가 필요하다. 로컬에 띄운 MinIO의 버킷·키를 `MINIO_*`에 넣는다.
 - 공개 사이트: http://localhost:3000
 - 관리자: http://localhost:3000/admin
   - GitHub OAuth App의 callback URL은 `http://localhost:3000/api/auth/callback/github`로 등록한다.
@@ -43,6 +44,16 @@ docs/domain/             # 도메인별 불변식과 함정
 ```
 
 ## 배포 (VPS)
+
+공용 MinIO(서버에 따로 둔 compose, `name: minio`)가 외부 network `minio`에 떠 있어야 한다 ([ADR-0007](docs/adr/0007-minio-image-upload.md)).
+블로그용 버킷과 그 버킷만 허용한 키를 만들어 `.env`의 `MINIO_*`에 넣는다.
+
+```bash
+mc mb local/blog
+mc admin policy create local blog-rw blog-policy.json   # s3:GetObject·PutObject on arn:aws:s3:::blog/*
+mc admin user add local blog-app <secret>
+mc admin policy attach local blog-rw --user blog-app
+```
 
 ```bash
 cp .env.example .env        # 운영 값으로 채운다. POSTGRES_PASSWORD는 반드시 바꾼다

@@ -1,18 +1,32 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useRef } from "react";
 import type { Project } from "@/generated/prisma/client";
+import ImageUploadButton from "../_components/ImageUploadButton";
 import { ContentFields, Field, FormFooter, inputClass } from "../_components/ui";
 import { deleteProject, saveProject } from "./actions";
 
 export default function ProjectForm({ project }: { project?: Project }) {
   const [state, action] = useActionState(saveProject.bind(null, project?.id ?? null), {});
+  const thumbnailRef = useRef<HTMLInputElement>(null);
 
   return (
     <form action={action} className='space-y-4'>
       <ContentFields item={project} values={state.values}>
         <Field label='썸네일 URL (비우면 기본 이미지)'>
-          <input name='thumbnail' defaultValue={state.values?.thumbnail ?? project?.thumbnail ?? ""} className={inputClass} />
+          <div className='flex items-center gap-2'>
+            <input
+              ref={thumbnailRef}
+              name='thumbnail'
+              defaultValue={state.values?.thumbnail ?? project?.thumbnail ?? ""}
+              className={inputClass}
+            />
+            <ImageUploadButton
+              onUploaded={(url) => {
+                if (thumbnailRef.current) thumbnailRef.current.value = url;
+              }}
+            />
+          </div>
         </Field>
         <div className='grid gap-4 sm:grid-cols-2'>
           <Field label='GitHub URL'>
