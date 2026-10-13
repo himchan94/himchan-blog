@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import type { Post } from "@/generated/prisma/client";
-import { ContentFields, Field, FormFooter, inputClass } from "../ui";
+import { ContentFields, Field, FormFooter, inputClass } from "../_components/ui";
 import { deletePost, savePost } from "./actions";
 
 export default function PostForm({

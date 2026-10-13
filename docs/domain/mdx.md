@@ -26,7 +26,6 @@ flowchart LR
 
 ## 4. 함정
 
-- 기존 MDX 파일 본문의 `import` 줄은 런타임 컴파일에서 쓸 수 없다. 이관 스크립트(`scripts/import-mdx.ts`)가 제거한다.
 - `blockJS` 기본값 때문에 본문의 `{표현식}`은 조용히 사라진다. JSX 속성은 문자열(`className='mb-4'`)로만 쓴다.
 
 ## 5. 확장 포인트

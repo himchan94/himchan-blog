@@ -1,8 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import MarkdownField from "../MarkdownField";
-import { FormFooter } from "../ui";
+import MarkdownField from "../_components/MarkdownField";
+import { FormFooter } from "../_components/ui";
 import { saveAbout } from "./actions";
 
 export default function AboutForm({ content }: { content: string }) {

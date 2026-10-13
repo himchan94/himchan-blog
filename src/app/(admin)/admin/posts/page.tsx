@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/auth";
 import { prisma } from "@/lib/db";
 import { isMock, mockAdmin } from "@/mocks";
-import ContentTable from "../ContentTable";
+import ContentTable from "../_components/ContentTable";
 
 export default async function AdminPosts() {
   await requireAdmin();

@@ -5,7 +5,7 @@ import { requireAdmin } from "@/auth";
 import { prisma } from "@/lib/db";
 import { isMock, mockAdmin } from "@/mocks";
 import { Prisma } from "@/generated/prisma/client";
-import { field, formError, type FormState } from "../form";
+import { field, formError, type FormState } from "../_lib/form";
 
 export async function saveSeries(
   id: string | null,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { Field, FormFooter, inputClass } from "../ui";
+import { Field, FormFooter, inputClass } from "../_components/ui";
 import { deleteSeries, saveSeries } from "./actions";
 
 type Series = { id: string; title: string; description: string; postCount: number };

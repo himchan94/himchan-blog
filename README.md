@@ -25,19 +25,13 @@ npm run dev
   - GitHub OAuth App의 callback URL은 `http://localhost:3000/api/auth/callback/github`로 등록한다.
   - `ADMIN_GITHUB_ID`에는 `https://api.github.com/users/<login>`에서 확인한 숫자 `id`를 넣는다.
 
-기존 MDX 파일(`src/content/`)을 DB로 옮길 때는 한 번만 실행한다(다시 실행해도 slug 기준으로 덮어쓴다).
-
-```bash
-npx tsx scripts/import-mdx.ts
-```
-
 ## 프로젝트 구조
 
 ```
 src/
 ├── app/
 │   ├── (public)/        # 공개 페이지 (요청 시 렌더링)
-│   ├── (admin)/admin/   # 관리자 CRUD
+│   ├── (admin)/admin/   # 관리자 CRUD (_components·_lib: 라우트가 아닌 공용 모듈)
 │   └── api/auth/        # Auth.js 라우트
 ├── auth.ts              # 인증 설정, requireAdmin()
 ├── components/mdx/      # MDX 렌더러, 허용 컴포넌트, 저장 전 검증

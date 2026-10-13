@@ -5,7 +5,7 @@ import { requireAdmin } from "@/auth";
 import { prisma } from "@/lib/db";
 import { isMock, mockAdmin } from "@/mocks";
 import { validateMdx } from "@/components/mdx/validate";
-import { field, formError, type FormState } from "../form";
+import { field, formError, type FormState } from "../_lib/form";
 
 export async function saveAbout(_prev: FormState, formData: FormData): Promise<FormState> {
   await requireAdmin();

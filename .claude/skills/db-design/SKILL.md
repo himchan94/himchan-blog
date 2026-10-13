@@ -80,7 +80,7 @@ WHERE seq_scan > idx_scan ORDER BY seq_tup_read DESC;
 - 컬럼 rename은 생성된 SQL을 `ALTER TABLE ... RENAME COLUMN`으로 고친다 (데이터 유실 방지).
 - 운영 데이터가 있는 테이블의 파괴적 변경은 단계를 나눈다:
   1. nullable 컬럼 추가 → 2. 코드가 양쪽에 쓰기 → 3. 백필 → 4. 새 컬럼에서 읽기 → 5. 옛 컬럼 제거
-- 스키마를 바꾼 뒤 `npx prisma generate`로 클라이언트를 재생성하고, 이관 스크립트(`scripts/import-mdx.ts`)가 새 제약과 맞는지 확인한다.
+- 스키마를 바꾼 뒤 `npx prisma generate`로 클라이언트를 재생성한다.
 
 ## 쿼리
 

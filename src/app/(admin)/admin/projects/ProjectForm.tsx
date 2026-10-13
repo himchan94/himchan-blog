@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import type { Project } from "@/generated/prisma/client";
-import { ContentFields, Field, FormFooter, inputClass } from "../ui";
+import { ContentFields, Field, FormFooter, inputClass } from "../_components/ui";
 import { deleteProject, saveProject } from "./actions";
 
 export default function ProjectForm({ project }: { project?: Project }) {
