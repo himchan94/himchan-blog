@@ -15,12 +15,12 @@ Next.js 기반 개인 블로그입니다. 글·프로젝트·About은 PostgreSQL
 ```bash
 cp .env.example .env        # AUTH_* 값은 GitHub OAuth App을 만들어 채운다
 npm install                 # postinstall에서 prisma generate
-docker compose up -d        # PostgreSQL만 뜬다
+docker compose --profile dev up -d   # PostgreSQL만 뜬다
 npx prisma migrate deploy
 npm run dev
 ```
 
-- 이미지 업로드는 MinIO가 필요하다. 로컬에 띄운 MinIO의 버킷·키를 `MINIO_*`에 넣는다.
+- 이미지 업로드는 S3 호환 저장소가 필요하다. 로컬에 띄운 저장소(Garage·MinIO 등)의 버킷·키를 `MINIO_*`에 넣는다.
 - 공개 사이트: http://localhost:3000
 - 관리자: http://localhost:3000/admin
   - GitHub OAuth App의 callback URL은 `http://localhost:3000/api/auth/callback/github`로 등록한다.
@@ -45,23 +45,33 @@ docs/domain/             # 도메인별 불변식과 함정
 
 ## 배포 (VPS)
 
-공용 MinIO(서버에 따로 둔 compose, `name: minio`)가 외부 network `minio`에 떠 있어야 한다 ([ADR-0007](docs/adr/0007-minio-image-upload.md)).
-블로그용 버킷과 그 버킷만 허용한 키를 만들어 `.env`의 `MINIO_*`에 넣는다.
+서버 디렉토리는 공용 인프라 `/srv/infra/*`, 앱 `/srv/apps/*`로 나눈다. 이 repo는 `/srv/apps/himchan-blog`에 clone한다.
 
-```bash
-mc mb local/blog
-mc admin policy create local blog-rw blog-policy.json   # s3:GetObject·PutObject on arn:aws:s3:::blog/*
-mc admin user add local blog-app <secret>
-mc admin policy attach local blog-rw --user blog-app
+- 공용 Postgres(`/srv/infra/postgres`)가 외부 network `postgres`에 떠 있어야 한다 ([ADR-0008](docs/adr/0008-shared-postgres-host-nginx.md)).
+  블로그 전용 계정과 DB를 만들고 `.env`의 `POSTGRES_USER`·`POSTGRES_PASSWORD`·`POSTGRES_DB`에 넣는다.
+- 공용 Garage(`/srv/infra/garage`)가 외부 network `garage`에 떠 있어야 한다 ([ADR-0009](docs/adr/0009-garage-instead-of-minio.md)).
+  블로그용 버킷과 그 버킷만 허용한 키를 만들어 `.env`의 `MINIO_*`에 넣는다.
+
+```sql
+CREATE ROLE blog LOGIN PASSWORD '<secret>';
+CREATE DATABASE blog OWNER blog;
+REVOKE ALL ON DATABASE blog FROM PUBLIC;
 ```
 
 ```bash
-cp .env.example .env        # 운영 값으로 채운다. POSTGRES_PASSWORD는 반드시 바꾼다
+# /srv/infra/garage에서
+docker compose exec garage /garage bucket create blog
+docker compose exec garage /garage key create blog-app       # 출력된 Key ID·Secret을 MINIO_ACCESS_KEY·MINIO_SECRET_KEY에
+docker compose exec garage /garage bucket allow --read --write blog --key blog-app
+```
+
+```bash
+cp .env.example .env        # 운영 값으로 채운다
 docker compose --profile app up -d --build
 ```
 
-`migrate` 서비스가 `prisma migrate deploy`를 실행한 뒤 `app`(포트 3000)이 뜬다.
-PostgreSQL 포트는 `127.0.0.1`에만 열린다. 앞단에 리버스 프록시(HTTPS)를 두고, 운영 GitHub OAuth App의 callback URL을 운영 도메인으로 등록한다.
+`migrate` 서비스가 `prisma migrate deploy`를 실행한 뒤 `app`이 `127.0.0.1:3000`에 뜬다.
+호스트 nginx가 이 포트로 프록시한다(`client_max_body_size`는 이미지 업로드 한도에 맞춰 11m 이상). 운영 GitHub OAuth App의 callback URL은 운영 도메인으로 등록한다.
 
 ## 라이선스
 

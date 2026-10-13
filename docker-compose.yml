@@ -16,6 +16,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    # 운영은 서버의 공용 Postgres를 쓴다 (ADR-0008). 로컬 개발에서만 띄운다.
+    profiles: ["dev"]
 
   # 1회성: 스키마를 반영하고 종료한다. standalone 이미지에는 prisma CLI가 없어서 builder 단계를 쓴다.
   migrate:
@@ -28,6 +30,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+        required: false
+    networks: [default, postgres]
     profiles: ["app"]
 
   app:
@@ -36,20 +40,25 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-blog}:${POSTGRES_PASSWORD:-blog}@postgres:5432/${POSTGRES_DB:-blog}?schema=public
-      # 공용 MinIO는 이 compose 밖에서 돈다. 컨테이너 이름으로 붙는다 (ADR-0007).
-      MINIO_URL: http://minio:9000
+      # 공용 S3 저장소(Garage)는 이 compose 밖에서 돈다. 컨테이너 이름으로 붙는다 (ADR-0009).
+      MINIO_URL: http://garage:3900
     ports:
-      - "3000:3000"
+      # 호스트 nginx만 붙도록 루프백에 바인딩한다 (ADR-0008).
+      - "127.0.0.1:3000:3000"
     depends_on:
       migrate:
         condition: service_completed_successfully
-    networks: [default, minio]
+    networks: [default, postgres, minio]
     profiles: ["app"]
 
 volumes:
   postgres-data:
 
 networks:
+  # 공용 Postgres가 붙어 있는 외부 network. 로컬은 dev profile의 postgres를 default network로 찾는다.
+  postgres:
+    external: true
+    name: ${POSTGRES_NETWORK:-postgres}
   minio:
     external: true
-    name: ${MINIO_NETWORK:-minio}
+    name: ${MINIO_NETWORK:-garage}

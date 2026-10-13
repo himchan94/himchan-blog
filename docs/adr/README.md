@@ -61,3 +61,5 @@ ADR은 그 소실을 막는 자리다 — 다른 문서가 "지금 무엇인가"
 | [0005](0005-authjs-github-allowlist.md) | 관리자 인증은 Auth.js v5 + GitHub id allowlist + JWT | Accepted | admin |
 | [0006](0006-vps-docker-deploy.md) | GitHub Pages 대신 VPS에서 Docker Compose로 배포 | Accepted | platform |
 | [0007](0007-minio-image-upload.md) | 관리자 업로드 이미지는 공용 MinIO + 앱의 /media/* 프록시 | Accepted | admin |
+| [0008](0008-shared-postgres-host-nginx.md) | 운영 DB는 공용 Postgres, 앞단은 호스트 nginx | Accepted | platform |
+| [0009](0009-garage-instead-of-minio.md) | 공용 S3 저장소 서버를 MinIO 대신 Garage로 | Accepted | admin |
