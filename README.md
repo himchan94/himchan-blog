@@ -65,9 +65,14 @@ docker compose exec garage /garage key create blog-app       # 출력된 Key ID�
 docker compose exec garage /garage bucket allow --read --write blog --key blog-app
 ```
 
+서버에서 `cp .env.example .env`로 운영 값을 채운다(`AUTH_URL`은 운영 도메인).
+
+main에 push하면 GitHub Actions가 이미지를 GHCR에 올리고 서버의 배포 스크립트를 실행한다 ([ADR-0011](docs/adr/0011-ghcr-actions-deploy.md)).
+repo Secrets에 `DEPLOY_SSH_KEY`(배포 전용 개인키), `DEPLOY_KNOWN_HOSTS`(서버 host key), `DEPLOY_HOST`가 필요하다.
+수동 배포·롤백은 서버에서 커밋 SHA를 넘긴다.
+
 ```bash
-cp .env.example .env        # 운영 값으로 채운다
-docker compose --profile app up -d --build
+SSH_ORIGINAL_COMMAND=<commit sha> /srv/infra/deploy/himchan-blog.sh
 ```
 
 `migrate` 서비스가 `prisma migrate deploy`를 실행한 뒤 `app`이 `127.0.0.1:3000`에 뜬다.

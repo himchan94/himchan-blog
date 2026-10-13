@@ -64,3 +64,4 @@ ADR은 그 소실을 막는 자리다 — 다른 문서가 "지금 무엇인가"
 | [0008](0008-shared-postgres-host-nginx.md) | 운영 DB는 공용 Postgres, 앞단은 호스트 nginx | Accepted | platform |
 | [0009](0009-garage-instead-of-minio.md) | 공용 S3 저장소 서버를 MinIO 대신 Garage로 | Accepted | admin |
 | [0010](0010-s3-env-names.md) | 저장소 env 이름은 `S3_*` | Accepted | admin |
+| [0011](0011-ghcr-actions-deploy.md) | main push → Actions가 GHCR에 이미지, SSH forced command로 배포 | Accepted | platform |

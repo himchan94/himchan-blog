@@ -19,11 +19,13 @@ services:
     # 운영은 서버의 공용 Postgres를 쓴다 (ADR-0008). 로컬 개발에서만 띄운다.
     profiles: ["dev"]
 
-  # 1회성: 스키마를 반영하고 종료한다. standalone 이미지에는 prisma CLI가 없어서 builder 단계를 쓴다.
+  # 1회성: 스키마를 반영하고 종료한다. standalone 이미지에는 prisma CLI가 없어서 deps 단계를 쓴다.
+  # 운영은 CI가 GHCR에 올린 이미지를 IMAGE_TAG(커밋 SHA)로 pull한다 (ADR-0011).
   migrate:
+    image: ghcr.io/himchan94/himchan-blog-migrate:${IMAGE_TAG:-latest}
     build:
       context: .
-      target: builder
+      target: deps
     command: npx prisma migrate deploy
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-blog}:${POSTGRES_PASSWORD:-blog}@postgres:5432/${POSTGRES_DB:-blog}?schema=public
@@ -35,6 +37,7 @@ services:
     profiles: ["app"]
 
   app:
+    image: ghcr.io/himchan94/himchan-blog:${IMAGE_TAG:-latest}
     build: .
     restart: unless-stopped
     env_file: .env
